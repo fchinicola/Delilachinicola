@@ -1,0 +1,26 @@
+{
+    "usuarios":
+    [{
+        "id": 0,
+        "admin": true,
+        "username": "admin",
+        "password": "admin",
+        "nombre": "Administrador",
+        "apellido": "Administrador",
+        "direccion": "adminadress",
+        "telefono": "adminnumber",
+        "email": "admin@delailahresto.com.ar"
+    
+    },
+    {
+        "id": 1,
+        "admin": false,
+        "username": "fchinicola",
+        "password": "123456",
+        "nombre": "Franco",
+        "apellido": "Chinicola",
+        "direccion": "Ushuaia",
+        "telefono": "02901-444444",
+        "email": "fchinicola@gmail.com",
+        "pedidos": []
+    }]}

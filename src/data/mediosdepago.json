@@ -1,0 +1,7 @@
+{
+    "mediosdepago":[
+        "efectivo", 
+        "tarjeta de debito", 
+        "tarjeta de credito"
+    ]
+}

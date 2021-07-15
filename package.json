@@ -1,0 +1,27 @@
+{
+  "name": "delailah-resto-api",
+  "version": "1.0.0",
+  "description": "Sprint Proyect 1 for Acamica BackEnd Developer ",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "delahila",
+    "api",
+    "resto",
+    "acamica",
+    "backend"
+  ],
+  "author": "Franco Chinicola",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "js-yaml": "^4.1.0",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
+}
