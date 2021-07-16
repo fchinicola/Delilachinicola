@@ -277,7 +277,7 @@ paths:
           description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
-  /pedido/{idpedido}/{newstatus}:
+  /pedido/{idpedido}/newstatus:
     put:
       tags:
       - "Only admins"
@@ -293,11 +293,15 @@ paths:
           schema:
             type: number
           required: true
-        - in: path
+        - in: query
           name: newstatus
           schema:
             type: string
-          required: true
+            enum:
+              - En preparacion
+              - Enviado
+              - Entregado
+          allowReserved: true
       responses:
         '200':    # status code
           description: Pedido actualizado
@@ -311,17 +315,42 @@ paths:
           description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
+  /productos/{id}:
+    get:
+      tags:
+      - "Productos"
+      summary: Buscar un producto.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+      responses:
+        '200':    # status code
+          description: Producto buscado
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: number
+                  nombre:
+                    type: string
+                  descripcion:
+                    type: string
+                  precio:
+                    type: number
+        '401':
+          description: The specified user ID is invalid (not a number).
+        default:
+          description: Unexpected error
   /productos:
     get:
       tags:
       - "Productos"
       summary: Ver todos los Productos.
-      parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
       responses:
         '200':    # status code
           description: Listado de productos

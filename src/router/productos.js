@@ -1,9 +1,13 @@
 const express = require('express');
 const { productos } = require('../data/productos.json');
 
-// GET listado de productos
+// GET de productos
 function productosget(req, res) {
-    res.status(200).json(productos);
+    if (req.params.id) {
+        if (product = productos.find(producto => producto.id === Number(req.params.id))) {
+            return res.status(200).json(product);
+        } else return res.status(404).send('El producto no pudo ser encontrado');
+    } else return res.status(200).json(productos);
 }
 
 // Crear nuevo producto con el request.body enviado por el administrador

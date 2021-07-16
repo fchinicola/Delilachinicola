@@ -5,6 +5,8 @@ const { mediosdepago } = require('../data/mediosdepago.json');
 const todoslospedidos = [];
 const status = ["Pendiente", "Confirmado", "En Preparacion", "Enviado", "Entregado"];
 
+
+// Funcion para sumar el todal del pedido
 function sumartotal(arregloproductos) {
     let total = 0;
     for (const producto of arregloproductos) {
@@ -14,6 +16,8 @@ function sumartotal(arregloproductos) {
     return total;
 }
 
+//GET de todos pedidos (para el admin)
+//GET de los pedidos que hizo un usuario
 function mostrarpedidos(req, res) {
     if (req.user.admin) {
         return res.status(200).json(todoslospedidos);
@@ -24,6 +28,7 @@ function mostrarpedidos(req, res) {
     res.status(404).send('No se encuentran pedidos')
 }
 
+//GET de un pedido en especifico
 function mostrarunpedido(req, res) {
     const elpedido = req.elpedido;
     for (const pedido of req.user.pedidos) {
@@ -33,6 +38,8 @@ function mostrarunpedido(req, res) {
     }
 }
 
+
+//POST para un nuevo pedido
 function nuevoPedido(req, res) {
     const newpedido = {};
     newpedido.id = new Date().getTime();
@@ -52,7 +59,7 @@ function nuevoPedido(req, res) {
     res.status(201).json(newpedido);
 }
 
-
+//PUT para actualizar el pedido
 function actualizarPedido(req, res) {
     const elpedido = req.elpedido;
     for (const pedido of req.user.pedidos) {
@@ -69,6 +76,8 @@ function actualizarPedido(req, res) {
     }
 }
 
+
+//PUT para confirmar el pedido por parte de un user
 function confirmarpedido(req, res) {
     if (req.user.pedidos.length > 0) {
         const elpedido = req.elpedido;
@@ -79,6 +88,8 @@ function confirmarpedido(req, res) {
     } else return res.send('El usuario no realizo ningun pedido');
 }
 
+
+//DELETE de un admin para borrar un pedido
 function borrarpedido(req, res) {
     const elpedido = req.elpedido;
     const index = todoslospedidos.indexOf(elpedido);
@@ -86,9 +97,11 @@ function borrarpedido(req, res) {
     res.status(200).send(`El pedido ${pedidoseliminados} ha sido eliminado`);
 }
 
+
+//PUT para que el admin pueda cambiar el estado del pedido
 function admincambiarestado(req, res) {
     const elpedido = req.elpedido;
-    const newstatus = req.params.newstatus;
+    const newstatus = req.query.newstatus;
     elpedido.estado = newstatus;
     res.send(elpedido);
 }

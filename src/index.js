@@ -9,17 +9,13 @@ const { mediosdepagoget, mediosdepagoput, mediosdepagopost, mediosdepagodelete }
 const app = express();
 app.use(express.json());
 
-app.get('/', function (req, res) {
-  res.status(200).send('Hello world')
-});
-
-
 // Acciones sobre USUARIOS
 app.post('/login', login);
 app.post('/register', emailx2, nuevoUsuario);
 
 // Acciones sobre PRODUCTOS
 app.get('/productos', productosget);
+app.get('/productos/:id', productosget)
 app.post('/productos', needsAdmin, productospost);
 app.put('/productos/:idproducto', needsAdmin, productosput);
 app.delete('/productos/:idproducto', needsAdmin, productosdelete);
@@ -31,7 +27,7 @@ app.post('/pedido', userexist, nuevoPedido);
 app.put('/pedido/:idpedido', userexist, findpedido, actualizarPedido);
 app.put('/pedido/:idpedido/confirm', userexist, findpedido, confirmarpedido);
 app.delete('/pedido/:idpedido', userexist, findpedido, borrarpedido);
-app.put('/pedido/:idpedido/:newstatus', userexist, needsAdmin, findpedido, admincambiarestado);
+app.put('/pedido/:idpedido/newstatus', userexist, needsAdmin, findpedido, admincambiarestado);
 
 
 // Acciones sobre medios de pago
