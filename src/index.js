@@ -1,7 +1,7 @@
 const express = require('express');
 const { userexist, needsAdmin } = require('./middlewares/auth');
 const { documentacionSwagger } = require('./middlewares/documentation');
-const { emailx2, findpedido } = require('./middlewares/infomiddlewares');
+const { emailx2, findpedido } = require('./middlewares/info');
 const { login, nuevoUsuario } = require('./router/usuarios');
 const { mostrarpedidos, nuevoPedido, actualizarPedido, confirmarpedido, mostrarunpedido, borrarpedido, admincambiarestado } = require('./router/pedidos');
 const { productosget, productospost, productosput, productosdelete } = require('./router/productos');
