@@ -9,8 +9,8 @@
         "apellido": "Administrador",
         "direccion": "adminadress",
         "telefono": "adminnumber",
-        "email": "admin@delailahresto.com.ar"
-    
+        "email": "admin@delailahresto.com.ar",
+        "pedidos": []
     },
     {
         "id": 1,
