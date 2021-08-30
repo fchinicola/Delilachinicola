@@ -1,8 +1,3 @@
-const express = require('express');
-const { usuarios } = require('../data/usuarios.json');
-const { productos } = require('../data/productos.json');
-const { mediosdepago } = require('../data/mediosdepago.json');
-
 const todoslospedidos = [];
 const status = ['Pendiente', 'Confirmado', 'En Preparacion', 'Enviado', 'Entregado'];
 
@@ -10,8 +5,8 @@ const status = ['Pendiente', 'Confirmado', 'En Preparacion', 'Enviado', 'Entrega
 function sumartotal(arregloproductos) {
   let total = 0;
   for (const producto of arregloproductos) {
-    const preciosuma = Number(producto.precio) * Number(producto.cant);
-    total += preciosuma;
+    let preciosuma = Number(producto.precio) * Number(producto.cant);
+    total = total + preciosuma;
   }
   return total;
 }
@@ -25,7 +20,7 @@ function mostrarpedidos(req, res) {
   if (req.user.pedidos) {
     return res.status(200).json(req.user.pedidos);
   }
-  res.status(404).send('No se encuentran pedidos');
+  return res.status(404).send('No se encuentran pedidos')
 }
 
 // GET de un pedido en especifico
@@ -34,7 +29,7 @@ function mostrarunpedido(req, res) {
   for (const pedido of req.user.pedidos) {
     if (Number(pedido.id) === Number(elpedido.id)) {
       return res.status(200).json(elpedido);
-    } return res.status(404).send('Su usuario no puede ver el pedido solicitado');
+    } else return res.status(404).send('Su usuario no puede ver el pedido solicitado');
   }
 }
 
@@ -48,7 +43,7 @@ function nuevoPedido(req, res) {
     newpedido.direccionenvio = req.body.direccionenvio;
   } else {
     newpedido.direccionenvio = req.user.direccion;
-  }
+  };
   newpedido.productos = arrProducts;
   newpedido.total = sumartotal(arrProducts);
   newpedido.mediodepago = req.body.payment;
@@ -68,8 +63,9 @@ function actualizarPedido(req, res) {
         elpedido.productos = arrproductos;
         elpedido.total = sumartotal(arrproductos);
         return res.status(200).send(elpedido);
+      } else {
+        return res.send(`El pedido se encuentra ${elpedido.estado} y no pueden realizarse cambios`)
       }
-      return res.send(`El pedido se encuentra ${elpedido.estado} y no pueden realizarse cambios`);
     }
   }
 }
@@ -107,7 +103,6 @@ module.exports = {
   actualizarPedido,
   confirmarpedido,
   mostrarunpedido,
-  todoslospedidos,
   borrarpedido,
   admincambiarestado,
 };

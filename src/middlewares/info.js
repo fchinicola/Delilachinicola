@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const { usuarios } = require('../data/usuarios.json');
 const { todoslospedidos } = require('../routes/pedidos');
 
