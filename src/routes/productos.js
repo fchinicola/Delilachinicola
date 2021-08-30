@@ -1,4 +1,3 @@
-const express = require('express');
 const { productos } = require('../data/productos.json');
 
 // GET de productos
@@ -6,8 +5,8 @@ function productosget(req, res) {
   if (req.params.id) {
     if (product = productos.find((producto) => producto.id === Number(req.params.id))) {
       return res.status(200).json(product);
-    } return res.status(404).send('El producto no pudo ser encontrado');
-  } return res.status(200).json(productos);
+    } else return res.status(404).send('El producto no pudo ser encontrado');
+  } else return res.status(200).json(productos);
 }
 
 // Crear nuevo producto con el request.body enviado por el administrador
@@ -40,7 +39,7 @@ function productosput(req, res) {
       return res.status(200).json(producto);
     }
   }
-  res.status(404).send('El producto no fue encontrado y no se pudo actualizar');
+  return res.status(404).send('El producto no fue encontrado y no se pudo actualizar');
 }
 
 // Elimina un producto con el req.params enviado siempre q sea requerio por un admin
@@ -53,7 +52,7 @@ function productosdelete(req, res) {
       return res.status(200).json(productos);
     }
   }
-  res.status(400).send('Producto no encontrado');
+  return res.status(400).send('Producto no encontrado')
 }
 
 module.exports = {

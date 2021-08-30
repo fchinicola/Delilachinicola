@@ -1,18 +1,17 @@
-const express = require('express');
 const { usuarios } = require('../data/usuarios.json');
 
 // Login de usuarios
 function login(req, res) {
-  const { username } = req.body;
-  const { passwd } = req.body;
+  const username = req.body.username;
+  const passwd = req.body.passwd;
   for (const usuario of usuarios) {
     if (username === usuario.username && passwd === usuario.password) {
       console.log(`Login aprobado de ${username}`);
-      const { id } = usuario;
+      let id = usuario.id;
       return res.status(200).json({ userid: id });
     }
   }
-  res.status(401).send('User not found');
+  return res.status(401).send('User not found');
 }
 
 // Registro de usuarios
