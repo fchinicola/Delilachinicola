@@ -3,14 +3,14 @@ const fs = require('fs');
 const swaggerUi = require('swagger-ui-express');
 
 function documentacionSwagger(server) {
-    try {
-        const doc = yaml.load(fs.readFileSync('./src/swagger.yaml'));
-        server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
-    } catch (e) {
-        console.log(e);
-    }
+  try {
+    const doc = yaml.load(fs.readFileSync('./src/swagger.yaml'));
+    server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
+  } catch (e) {
+    global.console.log(e);
+  }
 };
 
 module.exports = {
-    documentacionSwagger
+  documentacionSwagger,
 };
