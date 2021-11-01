@@ -3,10 +3,11 @@ const { productos } = require('../data/productos.json');
 // GET de productos
 function productosget(req, res) {
   if (req.params.id) {
+    let product;
     if (product = productos.find((producto) => producto.id === Number(req.params.id))) {
       return res.status(200).json(product);
-    } else return res.status(404).send('El producto no pudo ser encontrado');
-  } else return res.status(200).json(productos);
+    } return res.status(404).send('El producto no pudo ser encontrado');
+  } return res.status(200).json(productos);
 }
 
 // Crear nuevo producto con el request.body enviado por el administrador
@@ -16,7 +17,7 @@ function productospost(req, res) {
   if (productos.length > 0) {
     const lastproducto = productos.length - 1;
     id = productos[lastproducto].id;
-    id++;
+    id += 1;
   }
   nuevoProducto.id = id;
   productos.push(nuevoProducto);
@@ -26,14 +27,12 @@ function productospost(req, res) {
 // Actualiza un producto existente con el req.body enviado por el admin
 function productosput(req, res) {
   const idplato = req.params.idproducto;
-  console.log(req.body.pepito);
   for (const producto of productos) {
     if (Number(idplato) === producto.id) {
-      if (req.body.descripcion != 'undefined') {
-        console.log('a');
+      if (req.body.descripcion !== 'undefined') {
         producto.descripcion = req.body.descripcion;
       }
-      if (req.body.precio != 'undefined') {
+      if (req.body.precio !== 'undefined') {
         producto.precio = req.body.precio;
       }
       return res.status(200).json(producto);
@@ -52,7 +51,7 @@ function productosdelete(req, res) {
       return res.status(200).json(productos);
     }
   }
-  return res.status(400).send('Producto no encontrado')
+  return res.status(400).send('Producto no encontrado');
 }
 
 module.exports = {

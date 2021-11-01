@@ -29,8 +29,8 @@ function mostrarunpedido(req, res) {
   for (const pedido of req.user.pedidos) {
     if (Number(pedido.id) === Number(elpedido.id)) {
       return res.status(200).json(elpedido);
-    } else return res.status(404).send('Su usuario no puede ver el pedido solicitado');
-  }
+    }
+  } return res.status(404).send('Su usuario no puede ver el pedido solicitado');
 }
 
 // POST para un nuevo pedido
@@ -63,11 +63,10 @@ function actualizarPedido(req, res) {
         elpedido.productos = arrproductos;
         elpedido.total = sumartotal(arrproductos);
         return res.status(200).send(elpedido);
-      } else {
-        return res.send(`El pedido se encuentra ${elpedido.estado} y no pueden realizarse cambios`)
       }
     }
   }
+  return res.send(`El pedido se encuentra ${elpedido.estado} y no pueden realizarse cambios`)
 }
 
 // PUT para confirmar el pedido por parte de un user

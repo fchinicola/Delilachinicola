@@ -1,4 +1,5 @@
 const express = require('express');
+const { config } = require('dotenv');
 const { userexist, needsAdmin } = require('./middlewares/auth');
 const { documentacionSwagger } = require('./middlewares/documentation');
 const { emailx2, findpedido } = require('./middlewares/info');
@@ -12,6 +13,7 @@ const {
 const {
   mediosdepagoget, mediosdepagoput, mediosdepagopost, mediosdepagodelete,
 } = require('./routes/mediosdepago');
+const { connect } = require('./models/database');
 
 const app = express();
 app.use(express.json());
@@ -42,7 +44,16 @@ app.post('/mediosdepago', userexist, needsAdmin, mediosdepagopost);
 app.put('/mediosdepago/:idpago', userexist, needsAdmin, mediosdepagoput);
 app.delete('/mediosdepago/:idpago', userexist, needsAdmin, mediosdepagodelete);
 
-app.listen(3000, () => {
+app.listen(3000, async () => {
+  config();
   documentacionSwagger(app);
   global.console.log('Server OK on port 3000');
+  const {
+    DB_USERNAME,
+    DB_PASSWORD,
+    DB_NAME,
+    DB_PORT,
+    DB_HOST,
+} = process.env;
+  const dbOK = await connect(DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME);
 });
