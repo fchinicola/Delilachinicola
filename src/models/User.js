@@ -20,7 +20,7 @@ addAdmin = async() => {
     try {
         let admin = await User.findOne({ username: 'admin', admin: true });
         if (admin === null) {
-            const admin = new User({ username: 'admin', admin: true, password: 'admin', email: 'admin@admin.com' });
+            const admin = new User({ username: 'admin', admin: true, password: 'admin', email: 'unknown' });
             await admin.save((err) => { if (err) return handleError(err) });
             console.log(admin);
             return admin;

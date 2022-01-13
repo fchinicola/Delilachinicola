@@ -2,7 +2,7 @@
   "name": "delailah-resto-api",
   "version": "2.0.0",
   "description": "Sprint Proyect 1 for Acamica BackEnd Developer ",
-  "main": "src/index.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
