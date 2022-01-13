@@ -13,7 +13,7 @@ API de gestion de pedidos de un restaurante, realizado para el primer sprint pro
 ## Instalacion:
 
 ```bash
-git clone https://github.com/fchinicola/SPRINT-PROYECT-1.git
+git clone
 npm install
 node index.js
 ```
