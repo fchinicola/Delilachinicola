@@ -11,6 +11,4 @@ function documentacionSwagger(server) {
     }
 };
 
-module.exports = {
-    documentacionSwagger
-};
+module.exports = { documentacionSwagger };

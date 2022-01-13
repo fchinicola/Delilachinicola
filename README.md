@@ -8,12 +8,13 @@ API de gestion de pedidos de un restaurante, realizado para el primer sprint pro
 - fs
 - Express
 - Swagger
+- Dotenv
 
 ## Instalacion:
 
 ```bash
 git clone https://github.com/fchinicola/SPRINT-PROYECT-1.git
-npm ci
+npm install
 node index.js
 ```
 
