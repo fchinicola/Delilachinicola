@@ -48,7 +48,7 @@ paths:
                   example: 123123123
                 email:
                   type: string
-                  example: usuario@ejemplo1.com
+                  example: usuariocom
       responses:
         '201':   #status code
           description: User created.
