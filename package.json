@@ -1,11 +1,11 @@
 {
   "name": "delailah-resto-api",
-  "version": "2.0.0",
-  "description": "Sprint Proyect 1 for Acamica BackEnd Developer ",
-  "main": "app.js",
+  "version": "2.3.0",
+  "description": "Sprint Proyect 2 for Acamica BackEnd Developer ",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js",
+    "test": "mocha"
   },
   "keywords": [
     "delahila",
@@ -17,6 +17,8 @@
   "author": "Franco Chinicola",
   "license": "MIT",
   "dependencies": {
+    "chai": "^4.3.5",
+    "chai-http": "^4.3.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",

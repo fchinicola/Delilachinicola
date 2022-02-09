@@ -15,7 +15,7 @@ API de gestion de pedidos de un restaurante, realizado para el primer sprint pro
 ```bash
 git clone
 npm install
-node index.js
+npm run dev
 ```
 
 ## Uso

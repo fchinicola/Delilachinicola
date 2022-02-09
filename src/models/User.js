@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
     {
         admin: { type: Boolean, default: false },
         username: { type: String, required: true, unique: true },
@@ -10,10 +10,15 @@ const userSchema = new mongoose.Schema(
         direccion: String,
         telefono: String,
         email: { type: String, required: true, unique: true },
-        pedidos: Array,
     });
 
-const User = mongoose.model('User', userSchema);
+    UserSchema.virtual('pedidos', {
+        ref: 'Pedido',
+        localField: '_id',
+        foreignField: 'User'
+      });
+
+const User = mongoose.model('User', UserSchema);
 
 //Creando el Usuario Administrador
 addAdmin = async() => {

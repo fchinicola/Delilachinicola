@@ -9,8 +9,9 @@ db.once('open', function(){
 });
 
 // Models
-require('./User');
-require('./Product');
-require('./Payment');
+require('./models/User');
+require('./models/Product');
+require('./models/Payment');
+require('./models/Pedido');
 addAdmin();
 addMenu();
