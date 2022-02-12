@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { homepage, showAllUsers, getUser, createUser, userLogin, printuser } = require('../controllers/userController');
+const { showAllUsers, getUser, createUser, userLogin, printuser, suspender } = require('../controllers/userController');
 const { authorize, needsAdmin} = require('../middlewares/auth');
 
 
@@ -21,6 +21,7 @@ router.get('/admin/users/:userid',authorize,needsAdmin, getUser, (req, res) => {
     res.status(200).json(res.user);
 });
 router.put('/admin/users/:userid', getUser);
+router.put('/admin/users/:userid/suspend', authorize, needsAdmin, suspender)
 
 
 

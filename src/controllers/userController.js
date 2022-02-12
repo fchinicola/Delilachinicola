@@ -3,16 +3,10 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const User = require("../models/User");
 
-async function homepage(req, res) {
-  let usuario1 = await User.findOne({ username: 'admin' });
-  console.log(usuario1._id.valueOf());
-  res.status(200).send('Hello World');
-}
-
 async function showAllUsers(req, res) {
   try {
-      const allusers = await User.find({});
-      return res.status(200).json(allusers);
+    const allusers = await User.find({});
+    return res.status(200).json(allusers);
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
@@ -43,11 +37,11 @@ async function userLogin(req, res) {
           if (token) { res.status(200).json({ token }) };
         })
       } else {
-        res.status(400).json(`Contraseña invalida`);
+        res.status(400).json(`Usuario o contraseña invalida`);
       }
     })
   } catch {
-    res.status(400).json(`Error al iniciar sesión`);
+    res.status(400).json(`Error al iniciar sesión, intentelo nuevamente`);
   }
 };
 
@@ -66,7 +60,7 @@ async function createUser(req, res) {
   });
   try {
     const newUser = await nuser.save();
-    res.status(201).json({id: newUser._id})
+    res.status(201).json({ id: newUser._id })
   } catch (err) {
     res.status(400).json({ message: err.message })
   }
@@ -85,11 +79,34 @@ function printuser(req, res) {
   res.json(req.user)
 }
 
+function suspender(req, res) {
+  if (req.params.userid) {
+    console.log(req.params.userid)
+    User.findOne(
+      { _id: req.params.userid },
+      (err, usr) => {
+        usr.suspendido = !usr.suspendido;
+        usr.save((err, result) => {
+          if (err) {
+            console.log(err)
+            res.send(err)
+          }
+          if (result.suspendido) {
+            res.status(200).json(`Se a suspendido el usuario ${req.params.userid}`);
+          } else {
+            res.status(200).json(`El usuario ${req.params.userid} ya no se encuentra suspendido`);
+          }
+        })
+      }
+    )
+  }
+}
+
 module.exports = {
-  homepage,
   showAllUsers,
   userLogin,
   createUser,
   getUser,
-  printuser
+  printuser,
+  suspender
 }

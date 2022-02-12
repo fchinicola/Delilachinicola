@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema(
         direccion: String,
         telefono: String,
         email: { type: String, required: true, unique: true },
+        suspendido: { type: Boolean, default: false },
     });
 
     UserSchema.virtual('pedidos', {
