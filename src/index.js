@@ -21,5 +21,6 @@ app.use('/api/v2', require('./routes/paymentRoutes'));
 // Server
 app.listen(port, () => {
   documentacionSwagger(app);
-  console.log(`Server OK on port ${port}.`);
+  let time = new Date().toLocaleTimeString();
+  console.log(`Server OK on port ${port} at ${time} hs.`);
 });

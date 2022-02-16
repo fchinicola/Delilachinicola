@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   title: Delaila Resto API
-  description: API de Delailah Resto para presentar en Sprint Proyect 1 de Acamica.
-  version: 1.0.0
+  description: API de Delailah Resto para presentar en Sprint Proyect 2 de Acamica.
+  version: 2.0.0
 servers:
   - url: http://localhost:3000/api/v2
     description: Server de prueba
@@ -15,8 +15,14 @@ tags:
     description: Todo sobre los Productos de Delailah Resto
   - name: Only admins
     description: Acciones solo para administradores
+components:
+  securitySchemes:
+    bearerAuth:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    
 paths:
-  /register:
+  /users/register:
     post:
       tags:
       - "Usuarios"
@@ -48,7 +54,7 @@ paths:
                   example: 123123123
                 email:
                   type: string
-                  example: usuariocom
+                  example: usuario@examples.com
       responses:
         '201':   #status code
           description: User created.
@@ -56,11 +62,13 @@ paths:
             application/json:
               schema:
                 type: object
-                items:
-                  type: string
+                properties:
+                  id:
+                    type: string
+                    description: El id del usuario creado
         default:
           description: Unexpected error
-  /login:
+  /users/login:
     post:
       tags:
       - "Usuarios"
@@ -85,48 +93,39 @@ paths:
             application/json:
               schema: 
                 type: object
-                items: 
-                  type: object
-        '401':
-          description: The specified user ID is invalid (not a number).
-        '404':
-          description: A user with the specified ID was not found.
+                properties: 
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                    description: JWT signature
+        '400':
+          description: Error en usuario o contraseña.
         default:
           description: Unexpected error
-  /pedido:
+  /pedidos:
     get:
+      security:
+        - bearerAuth: []
       tags:
       - "Pedidos"
       summary: Obtener listado de pedidos.
-      parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
       responses:
         '200':    # status code
           description: Listado de pedidos
           content:
             application/json:
               schema: 
-                type: object
+                type: array
                 items: 
-                  type: string
-        '401':
-          description: The specified user ID is invalid (not a number).
+                  type: object
         default:
           description: Unexpected error
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Pedidos"
       summary: Nuevo pedido.
-      parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
       requestBody:
         required: true
         content:
@@ -140,23 +139,20 @@ paths:
                 payment:
                   type: string
                   example: efectivo
-                products:
+                subpedido:
                   type: array
                   items:
                     type: object
                     properties:
                       idproducto:
                         type: number
-                        example: 1
+                        example: 620cc116bb519646507cfec4
                       cant:
                         type: number
                         example: 3
-                      precio:
-                        type: number
-                        example: 200
               required:
                 - payment
-                - products           
+                - subpedido           
       responses:
         '201':    # status code
           description: Pedido creado
@@ -166,25 +162,20 @@ paths:
                 type: object
                 items: 
                   type: string
-        '401':
-          description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
   /pedido/{idpedido}:
     put:
+      security:
+        - bearerAuth: []
       tags:
       - "Pedidos"
       summary: Actualizar pedido.
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
         - in: path
           name: idpedido
           schema:
-            type: number
+            type: string
           required: true
       requestBody:
         required: true
@@ -193,20 +184,17 @@ paths:
             schema:
               type: object
               properties:
-                products:
+                subpedido:
                   type: array
                   items:
                     type: object
                     properties:
                       idproducto:
-                        type: number
-                        example: 1
+                        type: string
+                        example: 620cc116bb519646507cfec4
                       cant:
                         type: number
                         example: 3
-                      precio:
-                        type: number
-                        example: 200
       responses:
         '200':    # status code
           description: Pedido actualizado
@@ -214,55 +202,43 @@ paths:
             application/json:
               schema: 
                 type: object
-                items: 
-                  type: string
-        '401':
-          description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
     delete:
+      security:
+        - bearerAuth: []
       tags:
       - "Pedidos"
       summary: Cancelar un pedido.
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
         - in: path
           name: idpedido
           schema:
-            type: number
+            type: string
           required: true
       responses:
-        '200':    # status code
-          description: Pedido cancelado
+        '204':    # status code
+          description: Pedido eliminado
           content:
             application/json:
               schema: 
                 type: string
                 items: 
                   type: string
-        '401':
-          description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
   /pedido/{idpedido}/confirm:
     put:
+      security:
+        - bearerAuth: []
       tags:
       - "Pedidos"
       summary: Confirmar el pedido.
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
         - in: path
           name: idpedido
           schema:
-            type: number
+            type: string
           required: true
       responses:
         '200':    # status code
@@ -277,21 +253,18 @@ paths:
           description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
-  /pedido/{idpedido}/newstatus:
+  /admin/pedido/{idpedido}/?newstatus:
     put:
+      security:
+        - bearerAuth: []
       tags:
       - "Only admins"
       summary: Cambiar estado pedido.
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
         - in: path
           name: idpedido
           schema:
-            type: number
+            type: string
           required: true
         - in: query
           name: newstatus
@@ -309,23 +282,19 @@ paths:
             application/json:
               schema: 
                 type: object
-                items: 
-                  type: string
-        '401':
-          description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
-  /productos/{id}:
+  /productos/{?idproducto}:
     get:
       tags:
       - "Productos"
       summary: Buscar un producto.
       parameters:
-        - in: path
-          name: id
+        - in: query
+          name: idproducto
           schema:
-            type: number
-          required: true
+            type: string
+          required: false
       responses:
         '200':    # status code
           description: Producto buscado
@@ -342,38 +311,15 @@ paths:
                     type: string
                   precio:
                     type: number
-        '401':
-          description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
-  /productos:
-    get:
-      tags:
-      - "Productos"
-      summary: Ver todos los Productos.
-      responses:
-        '200':    # status code
-          description: Listado de productos
-          content:
-            application/json:
-              schema: 
-                type: array
-                items: 
-                  type: object
-        '401':
-          description: The specified user ID is invalid (not a number).
-        default:
-          description: Unexpected error
+  /admin/productos:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Only admins"
       summary: Nuevo Producto (requiere administrador).
-      parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
       requestBody:
         required: true
         content:
@@ -391,34 +337,29 @@ paths:
                   type: number
                   example: 123
       responses:
-        '200':    # status code
+        '201':    # status code
           description: Producto creado
           content:
             application/json:
               schema: 
                 type: object
-        '401':
-          description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
-  /productos/{idproducto}:
+  /admin/productos/{idproducto}:
     put:
+      security:
+        - bearerAuth: []
       tags:
       - "Only admins"
       summary: Actualizar Producto (requiere administrador).
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
         - in: path
           name: idproducto
           schema:
-            type: number
+            type: string
           required: true
       requestBody:
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -437,47 +378,41 @@ paths:
             application/json:
               schema: 
                 type: object
-        '401':
-          description: The specified user ID is invalid (not a number).
+                properties:
+                  descripcion:
+                    type: string
+                  precio:
+                    type: number
         default:
           description: Unexpected error
     delete:
+      security:
+        - bearerAuth: []
       tags:
       - "Only admins"
       summary: Eliminar Producto (requiere administrador).
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
         - in: path
           name: idproducto
           schema:
-            type: number
+            type: string
           required: true
       responses:
-        '200':    # status code
+        '204':    # status code
           description: Producto eliminado
           content:
             application/json:
               schema: 
-                type: object
-        '401':
-          description: The specified user ID is invalid (not a number).
+                type: string
         default:
           description: Unexpected error
-  /mediosdepago:
+  /admin/payments:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - "Only admins"
       summary: Muestra todos los medios de pago disponible (requiere administrador).
-      parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
       responses:
         '200':
           description: Medios de pago disponible
@@ -486,16 +421,55 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  type: object
+                  properties:
+                    name: 
+                      type: string
+                      description: Nombre del medio de pago
+                    descripcion:
+                      type: string
+                      description: Descripcion del medio de pago
     post:
+      security:
+        - bearerAuth: []
       tags:
         - "Only admins"
       summary: Agregar un nuevo medio de pago (requiere administrador).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                descripcion:
+                  type: string    
+      responses:
+        '201':
+          description: Medio de pago creado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  descripcion: 
+                    type: string
+  /admin/payments/{idpayment}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - "Only admins"
+      summary: Actualiza un medio de pago (requiere administrador).
       parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
+        - in: path
+          name: idpayment
+          schema:
+            type: string
           required: true
       requestBody:
         required: true
@@ -504,28 +478,10 @@ paths:
             schema:
               type: object
               properties:
-                newmediopago:
-                  type: string      
-      responses:
-        '201':
-          description: Medios de pago creado
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+                name:
                   type: string
-  /mediosdepago/{idpago}:
-    put:
-      tags:
-        - "Only admins"
-      summary: Actualiza un medio de pago (requiere administrador).
-      parameters:
-        - in: header
-          name: userid
-          schema: 
-            type: number
-          required: true
+                descripcion:
+                  type: string
       responses:
         '200':
           description: Medios de pago actualizado
@@ -534,23 +490,67 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  type: object
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - "Only admins"
       summary: Elimina un medio de pago (requiere administrador).
       parameters:
-        - in: header
+        - in: path
+          name: idpayment
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: Medio de pago eliminado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /admin/users/{userid]:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - "Only admins"
+      summary: Muestra a un usuario o a todos los usuarios (requiere administrado).
+      parameters:
+        - in: query
           name: userid
-          schema: 
-            type: number
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Usuario/os
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /admin/users/{userid}/suspend:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - "Only admins"
+      summary: Muestra a un usuario o a todos los usuarios (requiere administrado).
+      parameters:
+        - in: path
+          name: userid
+          schema:
+            type: string
           required: true
       responses:
         '200':
-          description: Medios de pago eliminado
+          description: Suspende al usuario
           content:
             application/json:
               schema:
                 type: string
-                items:
-                  type: string

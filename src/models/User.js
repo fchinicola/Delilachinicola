@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { encriptar } = require('../middlewares/auth');
 
 const UserSchema = new mongoose.Schema(
     {
@@ -9,7 +10,10 @@ const UserSchema = new mongoose.Schema(
         apellido: String,
         direccion: String,
         telefono: String,
-        email: { type: String, required: true, unique: true },
+        email: { type: String,
+            required: true,
+            match: /.+\@.+\..+/,
+            unique: true },
         suspendido: { type: Boolean, default: false },
     });
 
@@ -26,7 +30,7 @@ addAdmin = async() => {
     try {
         let admin = await User.findOne({ username: 'admin', admin: true });
         if (admin === null) {
-            const admin = new User({ username: 'admin', admin: true, password: 'admin', email: 'unknown' });
+            const admin = new User({ username: 'admin', admin: true, password: encriptar('admin'), email: 'admin@admin.com' });
             await admin.save((err) => { if (err) return handleError(err) });
             console.log(admin);
             return admin;

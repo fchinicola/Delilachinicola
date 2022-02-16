@@ -1,6 +1,8 @@
 const express = require('express');
-const { productos } = require('../data/productos.json');
+const Product = require('../models/Product');
 
+
+/*TODO
 // GET de productos
 function productosget(req, res) {
     if (req.params.id) {
@@ -55,6 +57,7 @@ function productosdelete(req, res) {
     }
     res.status(400).send('Producto no encontrado')
 }
+*/
 
 module.exports = {
     productosget,

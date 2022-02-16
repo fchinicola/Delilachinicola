@@ -3,13 +3,21 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const User = require("../models/User");
 
-async function showAllUsers(req, res) {
-  try {
-    const allusers = await User.find({});
-    return res.status(200).json(allusers);
-  } catch (err) {
-    res.status(500).json({ message: err.message })
+async function showUsers(req, res) {
+  if (req.query.userid === undefined) { 
+    try {
+      const allusers = await User.find({});
+      return res.status(200).json(allusers);
+    } catch (err) {
+      return res.status(500).json({ message: err.message })
+    }
   }
+    try {
+      const userquery = await User.findOne({_id: req.query.userid})
+      res.status(200).json(userquery)
+    } catch (err) {
+      res.status(500).json({ message: err.message })
+    }
 };
 
 async function userLogin(req, res) {
@@ -67,18 +75,6 @@ async function createUser(req, res) {
 }
 
 
-function getUser(req, res, next) {
-  if (req.params.userid === req.user.id) {
-    next();
-  } else {
-    res.send('No es tu usuario')
-  }
-}
-
-function printuser(req, res) {
-  res.json(req.user)
-}
-
 function suspender(req, res) {
   if (req.params.userid) {
     console.log(req.params.userid)
@@ -103,10 +99,8 @@ function suspender(req, res) {
 }
 
 module.exports = {
-  showAllUsers,
+  showUsers,
   userLogin,
   createUser,
-  getUser,
-  printuser,
   suspender
 }
