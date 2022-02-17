@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { showUsers, createUser, userLogin, suspender } = require('../controllers/userController');
+const { showUsers, createUser, userLogin, suspender, validateUser } = require('../controllers/userController');
 const { authorize, needsAdmin} = require('../middlewares/auth');
 
 
 // Login & Register
-router.post('/users/login', userLogin);
+router.post('/users/login', validateUser, userLogin);
 router.post('/users/register', createUser);
 
 

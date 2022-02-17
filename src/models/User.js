@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { encriptar } = require('../middlewares/auth');
 
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
     {
         admin: { type: Boolean, default: false },
         username: { type: String, required: true, unique: true },
@@ -17,13 +17,13 @@ const UserSchema = new mongoose.Schema(
         suspendido: { type: Boolean, default: false },
     });
 
-    UserSchema.virtual('pedidos', {
+    userSchema.virtual('pedidos', {
         ref: 'Pedido',
         localField: '_id',
         foreignField: 'User'
       });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
 
 //Creando el Usuario Administrador
 addAdmin = async() => {

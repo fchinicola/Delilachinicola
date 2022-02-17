@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 
-const ProductSchema = mongoose.Schema(
+const productSchema =new mongoose.Schema(
     {
-        nombre: { type: String, required: true },
+        nombre: { type: String, required: true, unique: true },
         descripcion: { type: String, required: true },
         precio: {type: Number, required: true }
     });
 
-const Product = mongoose.model('Product', ProductSchema);
-
 //Creando el Menu
+
+const Product = mongoose.model('Product', productSchema);
+
 addMenu = async () => {
     try {
         let menu = await Product.findOne({ nombre: 'Papas Fritas' });
@@ -25,6 +26,5 @@ addMenu = async () => {
         console.log(error);
     }
 };
-
 
 module.exports = Product;

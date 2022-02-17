@@ -1,11 +1,8 @@
 const express = require('express');
-const { usuarios } = require('../data/usuarios.json');
-const { productos } = require('../data/productos.json');
-const { mediosdepago } = require('../data/mediosdepago.json');
-const todoslospedidos = [];
 const status = ["Pendiente", "Confirmado", "En Preparacion", "Enviado", "Entregado"];
 
-
+/*
+//TODO
 // Funcion para sumar el todal del pedido
 function sumartotal(arregloproductos) {
     let total = 0;
@@ -105,6 +102,7 @@ function admincambiarestado(req, res) {
     elpedido.estado = newstatus;
     res.send(elpedido);
 }
+*/
 
 module.exports = {
     mostrarpedidos,

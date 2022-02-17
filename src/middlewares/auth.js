@@ -25,12 +25,11 @@ function authorize(req, res, next) {
 };
 
 function needsAdmin(req, res, next) {
-    if (req.user.admin) {
-        next();
-    } else {
-        res.status(401).send('Usted no se encuentra autorizado.');
-    } 
-}
+    if (!req.user.admin) {
+        return res.status(401).send('Usted no se encuentra autorizado.');
+    }
+    next();
+} 
 
 
 

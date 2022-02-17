@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const SubpedidoSchema = new mongoose.Schema({
+const subpedidoSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
@@ -14,10 +14,10 @@ const SubpedidoSchema = new mongoose.Schema({
     cant: {type: Number, required: true}
 });
 
-const PedidoSchema = new Schema(
+const pedidoSchema = new Schema(
     {
         user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        subpedido: [SubpedidoSchema],
+        subpedido: [subpedidoSchema],
         fecha_de_pedido: { type: Date, default: Date.now() },
         estado: { type: String, required: true, enum: ['Pendiente', 'Confirmado', 'En preparacion', 'Enviado', 'Entregado'], default: 'Pendiente' },
         payment: { type: Schema.Types.ObjectId, ref: 'Payment' },
@@ -25,4 +25,4 @@ const PedidoSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model('Pedido', PedidoSchema);
+module.exports = mongoose.model('Pedido', pedidoSchema);

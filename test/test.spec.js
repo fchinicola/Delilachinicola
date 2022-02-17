@@ -1,25 +1,25 @@
+//const app = require('../src/index')
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const expect = require('chai').expect;
+const { expect } = require('chai');
+const { deleteOne } = require('../src/models/Product');
 
 chai.use(chaiHttp);
-const url = `http://localhost:${process.env.PORT}`;
+const url = `http://localhost:3000`;
 
 
-describe('Pruebas unitarias de usuarios', () => {
-  it('Registrar un usuario nuevo', () => {
+describe('Pruebas unitarias de login de un usuario', () => {
+  it('Login de usuario', () => {
     chai.request(url)
-      .post('/users/register')
+      .post('/api/v2/users/login')
+      .set('content-type', 'application/json')
       .send({
-        username: 'TestUser',
-        password: 'TestPassword',
-        email: 'testemail@example.com'
+        "username": "admin",
+        "password": "admin",
       })
-      .then(function (res) {
-        expect(res).to.have.status(201);
-      })
-      .catch(function (err) {
-        throw err;
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(202);
       });
   });
 });

@@ -87,7 +87,7 @@ paths:
                   type: string
                   example: bartsimpson123
       responses:
-        '200':    # status code
+        '202':    # status code
           description: Login exitoso
           content:
             application/json:
@@ -284,7 +284,7 @@ paths:
                 type: object
         default:
           description: Unexpected error
-  /productos/{?idproducto}:
+  /productos:
     get:
       tags:
       - "Productos"
@@ -512,28 +512,42 @@ paths:
                 type: array
                 items:
                   type: object
-  /admin/users/{userid]:
+  /admin/users:
     get:
       security:
         - bearerAuth: []
       tags:
         - "Only admins"
-      summary: Muestra a un usuario o a todos los usuarios (requiere administrado).
-      parameters:
-        - in: query
-          name: userid
-          schema:
-            type: string
-          required: false
+      summary: Muestra todos los usuarios (requiere administrador).
       responses:
         '200':
-          description: Usuario/os
+          description: Usuarios
           content:
             application/json:
               schema:
                 type: array
                 items:
                   type: object
+  /admin/users/{userid}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - "Only admins"
+      summary: Muestra a un usuario (requiere administrado).
+      parameters:
+        - in: path
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Usuario/os
+          content:
+            application/json:
+              schema:
+                type: object
   /admin/users/{userid}/suspend:
     put:
       security:

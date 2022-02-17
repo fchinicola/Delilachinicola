@@ -2,9 +2,10 @@ const { encriptar } = require("../middlewares/auth");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const User = require("../models/User");
+const { ErrorHandler, handleError } = require("../middlewares/errors");
 
 async function showUsers(req, res) {
-  if (req.query.userid === undefined) { 
+  if (req.params.userid === undefined) { 
     try {
       const allusers = await User.find({});
       return res.status(200).json(allusers);
@@ -13,12 +14,28 @@ async function showUsers(req, res) {
     }
   }
     try {
-      const userquery = await User.findOne({_id: req.query.userid})
+      const userquery = await User.findOne({_id: req.params.userid})
       res.status(200).json(userquery)
     } catch (err) {
       res.status(500).json({ message: err.message })
     }
 };
+
+async function validateUser(req, res, next) {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      throw new ErrorHandler(404, 'Debe completar los campos usuario y contraseña');
+    }
+    const user = await User.findOne({ username });
+    if (!user) {
+      throw new ErrorHandler(404, 'El usuario ingresado no se encuentra en la base de datos');
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
 
 async function userLogin(req, res) {
   try {
@@ -26,34 +43,30 @@ async function userLogin(req, res) {
     const query = User.where({
       username,
       password: encriptar(password),
-    })
+    });
     query.findOne((err, usuario) => {
-      if (err) return handleError(err);
+      if (err)
+        return handleError(err);
       if (usuario) {
         jwt.sign({
-          id: usuario._id,
-          admin: usuario.admin,
-          username: usuario.usuario,
-          nombre: usuario.nombre,
-          apellido: usuario.apellido,
-          direccion: usuario.direccion,
-          telefono: usuario.telefono,
-          email: usuario.email,
-          pedidos: usuario.pedidos,
+          _id: usuario._id,
+          admin: usuario.admin
         }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-          if (err) return console.log(err);
-          if (token) { res.status(200).json({ token }) };
-        })
+          if (err)
+            return handleError(err);
+          if (token) { res.status(202).json({ token }); };
+        });
       } else {
         res.status(400).json(`Usuario o contraseña invalida`);
       }
-    })
+    });
   } catch {
     res.status(400).json(`Error al iniciar sesión, intentelo nuevamente`);
   }
-};
+}
 
 async function createUser(req, res) {
+  try {
   if (!req.body || !req.body.password) {
     return res.send('No body send')
   }
@@ -66,7 +79,6 @@ async function createUser(req, res) {
     telefono: req.body.telefono,
     email: req.body.email
   });
-  try {
     const newUser = await nuser.save();
     res.status(201).json({ id: newUser._id })
   } catch (err) {
@@ -102,5 +114,6 @@ module.exports = {
   showUsers,
   userLogin,
   createUser,
-  suspender
+  suspender,
+  validateUser
 }
