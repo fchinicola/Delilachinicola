@@ -1,4 +1,3 @@
-const express = require('express');
 const Payment = require('../models/Payment');
 const { ErrorHandler } = require('../middlewares/errors')
 

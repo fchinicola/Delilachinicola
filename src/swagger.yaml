@@ -102,13 +102,37 @@ paths:
           description: Error en usuario o contraseña.
         default:
           description: Unexpected error
-  /pedidos:
+  /admin/pedidos:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - "Only admins"
+      summary: Obtener listado de pedidos.
+      responses:
+        '200':    # status code
+          description: Listado de pedidos
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: object
+        default:
+          description: Unexpected error
+  /users/{iduser}/pedidos:
     get:
       security:
         - bearerAuth: []
       tags:
       - "Pedidos"
       summary: Obtener listado de pedidos.
+      parameters:
+        - in: path
+          name: iduser
+          schema:
+            type: string
+          required: true
       responses:
         '200':    # status code
           description: Listado de pedidos
@@ -126,6 +150,12 @@ paths:
       tags:
       - "Pedidos"
       summary: Nuevo pedido.
+      parameters:
+        - in: path
+          name: iduser
+          schema:
+            type: string
+          required: true
       requestBody:
         required: true
         content:
@@ -133,20 +163,17 @@ paths:
             schema:
               type: object
               properties:
-                direccionenvio:
-                  type: string
-                  example: Av siempreviva 123
                 payment:
                   type: string
-                  example: efectivo
+                  example: 620d5e350f03cabce5c7466d
                 subpedido:
                   type: array
                   items:
                     type: object
                     properties:
-                      idproducto:
+                      producto:
                         type: number
-                        example: 620cc116bb519646507cfec4
+                        example: 620d7c02a3fbc4edaf476ef3
                       cant:
                         type: number
                         example: 3
@@ -164,7 +191,7 @@ paths:
                   type: string
         default:
           description: Unexpected error
-  /pedido/{idpedido}:
+  /users/{iduser}/pedidos/{idpedido}:
     put:
       security:
         - bearerAuth: []
@@ -172,6 +199,11 @@ paths:
       - "Pedidos"
       summary: Actualizar pedido.
       parameters:
+        - in: path
+          name: iduser
+          schema:
+            type: string
+          required: true
         - in: path
           name: idpedido
           schema:
@@ -184,17 +216,12 @@ paths:
             schema:
               type: object
               properties:
-                subpedido:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      idproducto:
-                        type: string
-                        example: 620cc116bb519646507cfec4
-                      cant:
-                        type: number
-                        example: 3
+                idproducto:
+                  type: string
+                  example: 620cc116bb519646507cfec4
+                cant:
+                  type: number
+                  example: 3
       responses:
         '200':    # status code
           description: Pedido actualizado
@@ -204,6 +231,7 @@ paths:
                 type: object
         default:
           description: Unexpected error
+  /users/{iduser}/pedidos/{idpedido}/cancelar:
     delete:
       security:
         - bearerAuth: []
@@ -213,6 +241,11 @@ paths:
       parameters:
         - in: path
           name: idpedido
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: iduser
           schema:
             type: string
           required: true
@@ -227,7 +260,7 @@ paths:
                   type: string
         default:
           description: Unexpected error
-  /pedido/{idpedido}/confirm:
+  /users/{iduser}/pedidos/{idpedido}/confirmar:
     put:
       security:
         - bearerAuth: []
@@ -237,6 +270,11 @@ paths:
       parameters:
         - in: path
           name: idpedido
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: iduser
           schema:
             type: string
           required: true
@@ -253,7 +291,7 @@ paths:
           description: The specified user ID is invalid (not a number).
         default:
           description: Unexpected error
-  /admin/pedido/{idpedido}/?newstatus:
+  /admin/pedidos/{idpedido}?newstatus:
     put:
       security:
         - bearerAuth: []
@@ -289,12 +327,6 @@ paths:
       tags:
       - "Productos"
       summary: Buscar un producto.
-      parameters:
-        - in: query
-          name: idproducto
-          schema:
-            type: string
-          required: false
       responses:
         '200':    # status code
           description: Producto buscado

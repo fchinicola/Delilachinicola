@@ -5,7 +5,7 @@ const User = require("../models/User");
 const { ErrorHandler, handleError } = require("../middlewares/errors");
 
 async function showUsers(req, res) {
-  if (req.params.userid === undefined) { 
+  if (req.params.userid === undefined) {
     try {
       const allusers = await User.find({});
       return res.status(200).json(allusers);
@@ -13,12 +13,12 @@ async function showUsers(req, res) {
       return res.status(500).json({ message: err.message })
     }
   }
-    try {
-      const userquery = await User.findOne({_id: req.params.userid})
-      res.status(200).json(userquery)
-    } catch (err) {
-      res.status(500).json({ message: err.message })
-    }
+  try {
+    const userquery = await User.findOne({ _id: req.params.userid })
+    res.status(200).json(userquery)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
 };
 
 async function validateUser(req, res, next) {
@@ -54,7 +54,10 @@ async function userLogin(req, res) {
         }, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
           if (err)
             return handleError(err);
-          if (token) { res.status(202).json({ token }); };
+          if (token) {
+            console.log(`Se a logeado el iduser: ${usuario._id.toString()}`);
+            res.status(202).json({ token });
+          };
         });
       } else {
         res.status(400).json(`Usuario o contraseña invalida`);
@@ -67,18 +70,18 @@ async function userLogin(req, res) {
 
 async function createUser(req, res) {
   try {
-  if (!req.body || !req.body.password) {
-    return res.send('No body send')
-  }
-  const nuser = new User({
-    username: req.body.username,
-    password: encriptar(req.body.password),
-    nombre: req.body.nombre,
-    apellido: req.body.apellido,
-    direccion: req.body.direccion,
-    telefono: req.body.telefono,
-    email: req.body.email
-  });
+    if (!req.body || !req.body.password) {
+      return res.send('No body send')
+    }
+    const nuser = new User({
+      username: req.body.username,
+      password: encriptar(req.body.password),
+      nombre: req.body.nombre,
+      apellido: req.body.apellido,
+      direccion: req.body.direccion,
+      telefono: req.body.telefono,
+      email: req.body.email
+    });
     const newUser = await nuser.save();
     res.status(201).json({ id: newUser._id })
   } catch (err) {

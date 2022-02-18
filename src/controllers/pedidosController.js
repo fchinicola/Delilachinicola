@@ -1,116 +1,139 @@
-const express = require('express');
-const status = ["Pendiente", "Confirmado", "En Preparacion", "Enviado", "Entregado"];
+const Pedido = require('../models/Pedido');
+const { ErrorHandler } = require('../middlewares/errors');
+const status = ["Pendiente", "Confirmado", "En preparacion", "Enviado", "Entregado"];
 
-/*
-//TODO
-// Funcion para sumar el todal del pedido
+
+// Funcion para sumar el todal del pedidos
 function sumartotal(arregloproductos) {
     let total = 0;
-    for (const producto of arregloproductos) {
-        let preciosuma = Number(producto.precio) * Number(producto.cant);
+    for (const item of arregloproductos) {
+        let preciosuma = Number(item.producto.precio) * Number(item.cant);
         total = total + preciosuma;
     }
     return total;
 }
 
 //GET de todos pedidos (para el admin)
+async function mostrarpedidos(req, res) {
+    try {
+        const allpedidos = await Pedido.find();
+        if (!allpedidos) {
+            res.status(404).send('No se encuentran pedidos');
+        } else {
+            return res.status(200).json(allpedidos);
+        }
+    } catch (error) {
+        res.send(error);
+    }
+}
+
 //GET de los pedidos que hizo un usuario
-function mostrarpedidos(req, res) {
-    if (req.user.admin) {
-        return res.status(200).json(todoslospedidos);
-    }
-    if (req.user.pedidos) {
-        return res.status(200).json(req.user.pedidos);
-    }
-    res.status(404).send('No se encuentran pedidos')
-}
-
-//GET de un pedido en especifico
-function mostrarunpedido(req, res) {
-    const elpedido = req.elpedido;
-    for (const pedido of req.user.pedidos) {
-        if (Number(pedido.id) === Number(elpedido.id)) {
-            return res.status(200).json(elpedido);
-        } else return res.status(404).send('Su usuario no puede ver el pedido solicitado');
+async function mostrarpedidosusuario(req, res) {
+    try {
+        const queryPedidos = await Pedido.find({ user_id: req.user._id }).populate('subpedido.producto', '-descripcion').populate('payment', 'name');
+        console.log(queryPedidos.length);
+        if (queryPedidos.length < 1) {
+            throw new ErrorHandler(404, 'No se encuentran pedidos');
+        }
+        res.status(200).json(queryPedidos);
+    } catch (error) {
+        res.send(error)
     }
 }
-
 
 //POST para un nuevo pedido
-function nuevoPedido(req, res) {
-    const newpedido = {};
-    newpedido.id = new Date().getTime();
-    const arrProducts = req.body.products;
-    newpedido.userid = req.user.id;
-    if (req.body.direccionenvio) {
-        newpedido.direccionenvio = req.body.direccionenvio;
-    } else {
-        newpedido.direccionenvio = req.user.direccion;
-    };
-    newpedido.productos = arrProducts;
-    newpedido.total = sumartotal(arrProducts);
-    newpedido.mediodepago = req.body.payment;
-    newpedido.estado = status[0];
-    todoslospedidos.push(newpedido);
-    req.user.pedidos.push(newpedido.id);
-    res.status(201).json(newpedido);
-}
-
-//PUT para actualizar el pedido
-function actualizarPedido(req, res) {
-    const elpedido = req.elpedido;
-    for (const pedido of req.user.pedidos) {
-        if (Number(pedido) === Number(elpedido.id)) {
-            if (elpedido.estado === status[0]) {
-                const arrproductos = req.body.products;
-                elpedido.productos = arrproductos;
-                elpedido.total = sumartotal(arrproductos);
-                return res.status(200).send(elpedido);
-            } else {
-                return res.send(`El pedido se encuentra ${elpedido.estado} y no pueden realizarse cambios`)
-            }
+async function nuevoPedido(req, res) {
+    try {
+        if (req.body) {
+            const nuevopedido = {
+                user_id: req.user._id,
+                subpedido: req.body.subpedido,
+                payment: req.body.payment
+            };
+            const p = new Pedido(nuevopedido);
+            const pedidoguardado = await p.save();
+            console.log(pedidoguardado);
+            res.status(200).json(pedidoguardado);
         }
+    } catch (error) {
+        res.send(error);
     }
 }
 
 
+//PUT para actualizar el pedido
+async function actualizarPedido(req, res) {
+    try {
+        const { idpedido } = req.params;
+        const querypedido = await Pedido.findById(idpedido);
+        querypedido.subpedido.push(req.body);
+        const pedidoactualizado = await querypedido.save();
+        res.status(200).json(pedidoactualizado.populate('subpedido.producto', '-descripcion').populate('payment', 'name'));
+    } catch (error) {
+        res.send(error)
+    }
+}
+
 //PUT para confirmar el pedido por parte de un user
-function confirmarpedido(req, res) {
-    if (req.user.pedidos.length > 0) {
-        const elpedido = req.elpedido;
-        if (elpedido.estado === status[0]) {
-            elpedido.estado = status[1];
-            return res.status(200).json(elpedido)
-        } else return res.send(`El pedido no puede ser confirmado, se encuentra en estado ${elpedido.estado}`);
-    } else return res.send('El usuario no realizo ningun pedido');
+async function confirmarpedido(req, res) {
+    try {
+        const { idpedido } = req.params;
+        const querypedido = await Pedido.findById(idpedido).populate('subpedido.producto', '-descripcion').populate('payment', 'name');
+        if (querypedido.estado !== 'Pendiente') {
+            throw new ErrorHandler(404, `Su pedido ya se encuentra en un estado ${querypedido.estado}`);
+        }
+        querypedido.total = sumartotal(querypedido.subpedido);
+        querypedido.estado = 'Confirmado';
+        const pedidoconfirmado = await querypedido.save()
+        res.status(200).json(pedidoconfirmado)
+    } catch (error) {
+        res.send(error);
+    }
 }
 
 
 //DELETE de un admin para borrar un pedido
-function borrarpedido(req, res) {
-    const elpedido = req.elpedido;
-    const index = todoslospedidos.indexOf(elpedido);
-    const pedidoseliminados = todoslospedidos.splice(index, 1);
-    res.status(200).send(`El pedido ${pedidoseliminados} ha sido eliminado`);
+async function cancelarpedido(req, res) {
+    try {
+        const { idpedido } = req.params;
+        const query = await Pedido.findOne({ _id: idpedido });
+        if (!query) {
+            throw new ErrorHandler(404, `Su pedido no existe o ya fue eliminado`);
+        }
+        const result = await Pedido.deleteOne({ _id: idpedido });
+        if (result.deletedCount === 1) {
+            res.status(200).json(result);
+        }
+    } catch (error) {
+        res.send(error);
+    }
 }
 
 
 //PUT para que el admin pueda cambiar el estado del pedido
-function admincambiarestado(req, res) {
-    const elpedido = req.elpedido;
-    const newstatus = req.query.newstatus;
-    elpedido.estado = newstatus;
-    res.send(elpedido);
+async function admincambiarestado(req, res) {
+    try {
+        const { idpedido } = req.params;
+        const { newstatus } = req.query;
+        const querypedido = await Pedido.findById(idpedido);
+        if (!status.includes(newstatus)) {
+            throw new ErrorHandler(404, `Su pedido no puede ser actualizado al estado ${newstatus}`);
+        }
+        querypedido.estado = newstatus;
+        const newstatuspedido = await querypedido.save();
+        res.status(200).json(newstatuspedido);
+    } catch (error) {
+        res.send(error)
+    }
 }
-*/
+
 
 module.exports = {
     mostrarpedidos,
+    mostrarpedidosusuario,
     nuevoPedido,
     actualizarPedido,
     confirmarpedido,
-    mostrarunpedido,
-    todoslospedidos,
-    borrarpedido,
+    cancelarpedido,
     admincambiarestado
 }

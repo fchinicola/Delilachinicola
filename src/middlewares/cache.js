@@ -1,5 +1,4 @@
 const redis = require('redis');
-
 const client = redis.createClient();
 
 client.on('error', (error) => {
@@ -7,7 +6,7 @@ client.on('error', (error) => {
 });
 
 function cache(req, res, next) {
-    const key = `${req.method}_${req.originalUrl}`
+    const key = 'productos';
     client.get(key, (error, data) => {
         if (error || !data) {
             next();
@@ -18,13 +17,11 @@ function cache(req, res, next) {
     })
 };
 
-function refreshCache(req, data) {
-    const key = `${req.method}_${req.originalUrl}`;
+function refreshCache(key, data) {
     client.set(key, JSON.stringify(data));
 }
 
-function eraseCache(req) {
-    const key = `${req.method}_${req.originalUrl}`;
+function eraseCache(key) {
     console.log('Cache deleted');
     client.del(key);
 }

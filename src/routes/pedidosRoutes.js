@@ -1,17 +1,18 @@
 const express = require('express');
-
-const { authorize, needsAdmin } = require('../middlewares/auth');
+const { mostrarpedidos, mostrarpedidosusuario, nuevoPedido, confirmarpedido, actualizarPedido, admincambiarestado, cancelarpedido } = require('../controllers/pedidosController');
+const { authorize, needsAdmin, validacioniduser } = require('../middlewares/auth');
 
 const router = express.Router();
 
 //Operaciones sobre pedidos
-router.get('/users/:userid',authorize, );
-router.post('/users/:userid/pedido', authorize);
-router.put('/users/:userid/pedidos/:pedidoid', authorize);
-router.delete('/users/:userid/pedidos/:pedidoid', authorize);
+router.get('/users/:iduser/pedidos',authorize, validacioniduser, mostrarpedidosusuario);
+router.post('/users/:iduser/pedidos', authorize, validacioniduser, nuevoPedido);
+router.put('/users/:iduser/pedidos/:idpedido', authorize, validacioniduser, actualizarPedido);
+router.put('/users/:iduser/pedidos/:idpedido/confirmar', authorize, validacioniduser, confirmarpedido);
+router.delete('/users/:iduser/pedidos/:idpedido/cancelar', authorize , validacioniduser, cancelarpedido);
 
 //Operacion Admin sobre pedidos
-router.get('/admin/pedidos', authorize, needsAdmin, );
-router.put('/admin/pedidos/:pedidoid', authorize, needsAdmin, );
+router.get('/admin/pedidos', authorize, needsAdmin, mostrarpedidos);
+router.put('/admin/pedidos/:idpedido', authorize, needsAdmin, admincambiarestado);
 
 module.exports = router;

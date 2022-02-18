@@ -1,4 +1,3 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const Product = require('../models/Product');
 const { ErrorHandler } = require('../middlewares/errors');
@@ -22,18 +21,13 @@ async function validateProductId(req, res, next) {
 
 // GET de productos
 async function productosget(req, res) {
-    if (req.query.idproducto === undefined) {
+    try {
         const allproducts = await Product.find();
-        refreshCache(req, allproducts);
-        return res.status(200).json(allproducts)
+        refreshCache('productos', allproducts);
+        res.status(200).json(allproducts);
+    } catch (error) {
+        res.send(error);
     }
-    if (isValidObjectId(req.query.idproducto)) {
-        let result = await Product.findOne({ _id: req.query.idproducto })
-        if (result !== null) {
-            return res.status(200).json(result);
-        }
-    }
-    res.status(200).json({ msj: 'El producto no pudo ser encontrado' })
 }
 
 // Crear nuevo producto con el request.body enviado por el administrador
@@ -44,7 +38,7 @@ async function productospost(req, res) {
             typeof req.body.descripcion === 'string') {
             const { nombre, descripcion, precio } = req.body;
             const newproduct = await Product.create({ nombre, descripcion, precio });
-            eraseCache('GET_/api/v2/productos');
+            eraseCache('productos');
             return res.status(201).json(newproduct);
         }
     } catch (err) {
@@ -60,7 +54,7 @@ async function productosput(req, res) {
         const { name, descripcion, precio } = req.body;
         const update = await Product.findByIdAndUpdate(idproducto, { name, descripcion, precio });
         const updatedproduct = await Product.findById(idproducto);
-        eraseCache('GET_/api/v2/productos');
+        eraseCache('productos');
         res.status(200).json(updatedproduct)
     } catch (error) {
         res.send(error);
@@ -74,7 +68,7 @@ async function productosdelete(req, res) {
         const { idproducto } = req.params;
         const toDelete = await Product.deleteOne({ _id: idproducto });
         if (toDelete.deletedCount == 1) {
-            eraseCache('GET_/api/v2/productos');
+            eraseCache('productos');
             res.status(200).send(`El producto con id ${idproducto} fue eliminado satisfactoriamente`)
         }
     } catch (error) {
