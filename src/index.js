@@ -8,6 +8,8 @@ const { handleError } = require('./middlewares/errors');
 
 // Initialitations
 const port = process.env.PORT || 3000;
+const enviroment = process.env.NODE_ENV;
+const apiDescription = process.env.API_DESCRIPTION;
 require('./database');
 
 // Middlewares
@@ -48,6 +50,8 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   documentacionSwagger(app);
   let time = new Date().toLocaleTimeString();
+  console.log(`La aplicacion se esta ejecutando en el ambiente: '${enviroment}'`);
+  console.log(`Descripcion: ${apiDescription}`);
   console.log(`Server OK on port ${port} at ${time} hs.`);
 });
 
