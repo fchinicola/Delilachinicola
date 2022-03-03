@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:3000/api/v2
     description: Server de prueba
-  - url: http://www.delilachinicola.tk/api/api/v2
+  - url: https://www.delilachinicola.tk/api/api/v2
     description: Server de Produccion
 tags:
   - name: Usuarios
