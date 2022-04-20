@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const helmet = require("helmet");
+const cors = require('cors');
+const passport = require('passport');
 const { documentacionSwagger } = require('./middlewares/documentation');
 const { handleError } = require('./middlewares/errors');
 
@@ -11,11 +13,13 @@ const port = process.env.PORT || 3000;
 const enviroment = process.env.NODE_ENV;
 const apiDescription = process.env.API_DESCRIPTION;
 require('./database');
+app.use(passport.initialize());
 
 // Middlewares
 app.use(helmet());
 app.use(express.json());
-//app.use(jsonParseError);
+// Add headers before the routes are defined
+app.use(cors());
 
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
@@ -38,6 +42,7 @@ app.use('/api/v2', require('./routes/usersRoutes'));
 app.use('/api/v2', require('./routes/productsRoutes'));
 app.use('/api/v2', require('./routes/paymentRoutes'));
 app.use('/api/v2', require('./routes/pedidosRoutes'));
+app.use('/api/v2', require ('./routes/auth'));
 
 
 // errorHandler

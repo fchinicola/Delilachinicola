@@ -1,6 +1,6 @@
 const redis = require('redis');
 const client = redis.createClient({
-  host: "redisdelilah.dnp3op.0001.sae1.cache.amazonaws.com",
+  host: 'localhost',
   port: 6379
 })
 
