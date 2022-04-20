@@ -3,17 +3,14 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
-
 const cors = require("cors");
-const bodyParser = require("body-parser");
-
 const cookieSession = require("cookie-session");
 
 router.use(cors());
 
 router.use(
   cookieSession({
-    name: "google-auth-session",
+    name: "github-auth-session",
     keys: ["key1", "key2"],
   })
 );
@@ -21,23 +18,18 @@ router.use(
 router.use(passport.initialize());
 router.use(passport.session());
 
-router.get("/logout", (req, res) => {
-  req.session = null;
-  req.logout();
-  res.redirect("/");
-});
-
 router.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
+  "/github",
+  passport.authenticate("github", {
+    scope: ["user:email"],
     prompt: "consent",
+    session: false,
   })
 );
 
 router.get(
-  "/google/callback",
-  passport.authenticate("google", {
+  "/github/callback",
+  passport.authenticate("github", {
     session: false,
     failureRedirect: "../../users/register",
   }),

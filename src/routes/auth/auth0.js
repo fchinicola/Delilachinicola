@@ -1,43 +1,28 @@
 const express = require("express");
-const router = express.Router();
 const passport = require("passport");
+const router = express.Router();
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const cors = require("cors");
-const bodyParser = require("body-parser");
-
-const cookieSession = require("cookie-session");
-
 router.use(cors());
 
-router.use(
-  cookieSession({
-    name: "google-auth-session",
-    keys: ["key1", "key2"],
-  })
-);
 
 router.use(passport.initialize());
 router.use(passport.session());
 
-router.get("/logout", (req, res) => {
-  req.session = null;
-  req.logout();
-  res.redirect("/");
-});
-
 router.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    prompt: "consent",
+  "/auth0",
+  passport.authenticate("auth0", {
+    scope: ["openid email profile"],
+    session: false,
   })
 );
 
 router.get(
-  "/google/callback",
-  passport.authenticate("google", {
+  "/auth0/callback",
+  passport.authenticate("auth0", {
     session: false,
     failureRedirect: "../../users/register",
   }),

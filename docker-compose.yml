@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  delailahrestoapi:
+    depends_on: 
+      - cache
+    image: delilachinicola
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file: 
+      - .env
+    environment:
+     - REDIS_URL=redis://cache:6379
+    ports:
+      - 3000:3000
+  
+  cache:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"

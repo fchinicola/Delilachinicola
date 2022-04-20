@@ -1,14 +1,9 @@
-const yaml = require('js-yaml');
-const fs = require('fs');
+const router = require('express').Router();
+const YAML = require("yamljs");
 const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = YAML.load('src/swagger.yaml')
 
-function documentacionSwagger(server) {
-    try {
-        const doc = yaml.load(fs.readFileSync('./src/swagger.yaml'));
-        server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(doc));
-    } catch (e) {
-        console.log(e);
-    }
-};
+router.use('/api-docs', swaggerUi.serve);
+router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
-module.exports = { documentacionSwagger };
+module.exports = router;
