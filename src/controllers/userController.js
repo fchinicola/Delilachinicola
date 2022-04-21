@@ -41,15 +41,9 @@ async function validateUser(req, res, next) {
 async function userLogin(req, res) {
   try {
     const { username, password } = req.body;
-    const query = User.where({
-      username,
-      //password: await encriptar(password),
-    });
-    const match = await bcrypt.compare(password, query.password)
-    query.findOne((err, usuario) => {
-      if (err)
-        return handleError(err);
-      if (usuario && match) {
+    const usuario = await User.findOne({ username });
+    const match = await bcrypt.compare(password, usuario.password)
+      if (match) {
         jwt.sign({
           _id: usuario._id,
           admin: usuario.admin
@@ -64,7 +58,6 @@ async function userLogin(req, res) {
       } else {
         res.status(400).json(`Usuario o contraseña invalida`);
       }
-    });
   } catch {
     res.status(400).json(`Error al iniciar sesión, intentelo nuevamente`);
   }
