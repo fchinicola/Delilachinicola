@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken');
-const { createHmac } = require('crypto');
 const User = require('../models/User');
 const { ErrorHandler } = require('./errors');
 const { JWT_SECRET } = process.env;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
-
-function encriptar(secret) {
-    return createHmac('sha256', secret).digest('hex');
+async function encriptar(secret) {
+    try {
+        return await bcrypt.hash(secret, saltRounds)
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 

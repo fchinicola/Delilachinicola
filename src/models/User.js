@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { encriptar } = require("../middlewares/auth");
+const { ErrorHandler, handleError } = require("../middlewares/errors");
 
 const userSchema = new mongoose.Schema({
   admin: { type: Boolean, default: false },
@@ -68,13 +69,17 @@ addAdmin = async () => {
     let admin = await User.findOne({ username: "admin", admin: true });
     if (admin === null) {
       const admin = new User({
-        username: "admin",
         admin: true,
-        password: encriptar("admin"),
+        username: "admin",
+        password: await encriptar("admin"),
         email: "admin@admin.com",
+        nombre: "admin",
+        apellido: "admin",
+        direccion: "DireccionAdmin",
+        telefono: "123123",
       });
       await admin.save((err) => {
-        if (err) return handleError(err);
+        if (err) return console.log(err);
       });
       console.log(admin);
       return admin;

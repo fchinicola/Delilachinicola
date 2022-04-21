@@ -42,7 +42,7 @@ async function userLogin(req, res) {
     const { username, password } = req.body;
     const query = User.where({
       username,
-      password: encriptar(password),
+      password: await encriptar(password),
     });
     query.findOne((err, usuario) => {
       if (err)
@@ -75,7 +75,7 @@ async function createUser(req, res) {
     }
     const nuser = new User({
       username: req.body.username,
-      password: encriptar(req.body.password),
+      password: await encriptar(req.body.password),
       nombre: req.body.nombre,
       apellido: req.body.apellido,
       direccion: req.body.direccion,
