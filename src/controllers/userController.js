@@ -1,4 +1,5 @@
 const { encriptar } = require("../middlewares/auth");
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const User = require("../models/User");
@@ -42,12 +43,13 @@ async function userLogin(req, res) {
     const { username, password } = req.body;
     const query = User.where({
       username,
-      password: await encriptar(password),
+      //password: await encriptar(password),
     });
+    const match = await bcrypt.compare(password, query.password)
     query.findOne((err, usuario) => {
       if (err)
         return handleError(err);
-      if (usuario) {
+      if (usuario && match) {
         jwt.sign({
           _id: usuario._id,
           admin: usuario.admin
