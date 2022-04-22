@@ -54,9 +54,7 @@ router.get(
             token: null,
           });
         }
-        res.json({
-          token,
-        });
+        res.status(200).send(token);
       }
     );
   }
