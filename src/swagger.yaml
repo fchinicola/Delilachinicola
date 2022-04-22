@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
   title: Delaila Resto API
-  description: API de Delailah Resto para presentar en Sprint Proyect 2 de Acamica.
+  description: API de Delailah Resto para presentar en Sprint Proyect 4 de Acamica.
   version: 2.0.0
 servers:
   - url: https://www.delilachinicola.tk/api/api/v2
     description: Server de Produccion
   - url: http://localhost:3000/api/v2
-    description: Server de prueba
+    description: Server local de pruebas
 tags:
   - name: Usuarios
     description: Seccion Usuarios

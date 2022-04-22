@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const passport = require("passport");
 const { handleError } = require("./middlewares/errors");
-const { RedisStore, redisClient } = require("redis");
+
 
 // Initialitations
 const port = process.env.PORT || 3000;
@@ -19,24 +19,6 @@ app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
-app.enable("trust proxy");
-app.use(express.bodyParser());
-app.use(express.cookieParser());
-app.use(
-  session({
-    secret: "mi-secreto",
-    resave: false,
-    saveUninitialized: false,
-    name: "sid",
-    store: new RedisStore({ client: redisClient }),
-    proxy: process.env.NODE_ENV,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV,
-      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-    },
-  })
-);
 
 app.use(passport.initialize());
 app.use("/api/v2", require("./middlewares/documentation"));

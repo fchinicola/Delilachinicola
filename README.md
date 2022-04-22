@@ -1,10 +1,10 @@
 # Delailah Resto API
 
 ## Descripcion:
-API de gestion de pedidos de un restaurante, realizado para el segundo sprint proyect de Acamica. Con persistencia en una base de datos MongoDB
+API de gestion de pedidos de un restaurante, realizado para el segundo cuarto sprint proyect de Acamica. Con persistencia en una base de datos MongoDB
 
 ## Teconologias utilizadas:
-- NodeJS
+- NodeJs
 - fs
 - Express
 - Swagger
@@ -14,6 +14,8 @@ API de gestion de pedidos de un restaurante, realizado para el segundo sprint pr
 - Chai y Mocha
 - Helmet
 - JWT
+- Passport.js
+- Mercadopago API
 
 ## Instalacion:
 
@@ -39,8 +41,26 @@ npm run test
 
 ## Uso a travez de Swagger
 
-http://localhost:3000/api-docs/
+http://localhost:3000/api/v2/api-docs/
 
 ## Direccion
 
 http://localhost:3000/api/v2
+
+## Dockerfile
+
+```bash
+docker build -t delilachinicola-img .
+```
+
+## Docker-compose
+
+```bash
+docker-compose up -d
+```
+
+## Direcciones para ingresar con Oauth2.0
+
+http://localhost:3000/api/v2/auth/google
+http://localhost:3000/api/v2/auth/github
+http://localhost:3000/api/v2/auth/linkedin
