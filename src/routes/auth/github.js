@@ -32,6 +32,7 @@ router.get(
   passport.authenticate("github", {
     session: false,
     failureRedirect: process.env.REGISTER_URL,
+    failureMessage: true,
   }),
   (req, res) => {
     jwt.sign(

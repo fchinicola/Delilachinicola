@@ -37,8 +37,8 @@ passport.use(
         } else {
           return done(null, false);
         }
-      } catch (error) {
-        return done(error, false);
+      } catch (err) {
+        return done(err);
       }
     }
   )

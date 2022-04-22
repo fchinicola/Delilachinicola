@@ -39,6 +39,7 @@ router.get(
   passport.authenticate("google", {
     session: false,
     failureRedirect: process.env.REGISTER_URL,
+    failureMessage: true,
   }),
   (req, res) => {
     jwt.sign(
