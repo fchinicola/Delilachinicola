@@ -55,7 +55,7 @@ router.get(
             token: null,
           });
         }
-        res.status(200).send(token);
+        res.redirect('/' + token);
       }
     );
   }
