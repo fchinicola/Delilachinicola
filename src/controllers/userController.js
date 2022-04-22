@@ -56,7 +56,7 @@ async function userLogin(req, res) {
           };
         });
       } else {
-        res.status(400).json(`Usuario o contraseña invalida`);
+        res.status(401).json(`Usuario o contraseña invalida`);
       }
   } catch {
     res.status(400).json(`Error al iniciar sesión, intentelo nuevamente`);
