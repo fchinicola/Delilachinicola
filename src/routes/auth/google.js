@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
-
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -39,7 +38,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "../../users/register",
+    failureRedirect: process.env.REGISTER_URL,
   }),
   (req, res) => {
     jwt.sign(

@@ -31,7 +31,7 @@ router.get(
   "/github/callback",
   passport.authenticate("github", {
     session: false,
-    failureRedirect: "../../users/register",
+    failureRedirect: process.env.REGISTER_URL,
   }),
   (req, res) => {
     jwt.sign(

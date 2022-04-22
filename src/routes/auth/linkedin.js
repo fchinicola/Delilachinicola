@@ -47,7 +47,7 @@ router.get(
 router.get(
   "/linkedin/callback",
   passport.authenticate("linkedin", {
-    failureRedirect: "../../users/register",
+    failureRedirect: process.env.REGISTER_URL,
   }),
   (req, res) => {
     jwt.sign(
