@@ -13,9 +13,6 @@ services:
       - .env
     environment:
      - REDIS_URL=redis://cache:6379
-     - CALLBACK_URL_GITHUB=http://localhost:3000/api/v2/auth/github/callback
-     - CALLBACK_URL_LINKEDIN=http://localhost:3000/api/v2/auth/linkedin/callback
-     - CALLBACK_URL_GOOGLE=http://localhost:3000/api/v2/auth/google/callback
     ports:
       - 3000:3000
   
