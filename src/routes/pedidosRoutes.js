@@ -1,8 +1,8 @@
 const express = require('express');
+const router = express.Router();
 const { mostrarpedidos, mostrarpedidosusuario, nuevoPedido, confirmarpedido, actualizarPedido, admincambiarestado, cancelarpedido } = require('../controllers/pedidosController');
 const { authorize, needsAdmin, validacioniduser } = require('../middlewares/auth');
 
-const router = express.Router();
 
 //Operaciones sobre pedidos
 router.get('/users/:iduser/pedidos',authorize, validacioniduser, mostrarpedidosusuario);

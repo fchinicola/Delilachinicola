@@ -61,6 +61,6 @@ docker-compose up -d
 
 ## Direcciones para ingresar con Oauth2.0
 
-http://localhost:3000/api/v2/auth/google
-http://localhost:3000/api/v2/auth/github
-http://localhost:3000/api/v2/auth/linkedin
+- Google: http://localhost:3000/api/v2/auth/google
+- Github: http://localhost:3000/api/v2/auth/github
+- Linkedin: http://localhost:3000/api/v2/auth/linkedin

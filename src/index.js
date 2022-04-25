@@ -1,6 +1,6 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const helmet = require("helmet");
 const cors = require("cors");
 const passport = require("passport");

@@ -1,5 +1,4 @@
 const passport = require("passport");
-require("dotenv").config();
 const GitHubStrategy = require("passport-github2").Strategy;
 const { Octokit } = require("@octokit/core");
 const User = require("../models/User");

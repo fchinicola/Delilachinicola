@@ -30,8 +30,7 @@ async function mostrarpedidos(req, res) {
 //GET de los pedidos que hizo un usuario
 async function mostrarpedidosusuario(req, res) {
     try {
-        const queryPedidos = await Pedido.find({ user_id: req.user._id }).populate('subpedido.producto', '-descripcion').populate('payment', 'name');
-        console.log(queryPedidos.length);
+        const queryPedidos = await Pedido.find({ user_id: req.user._id }).populate('subpedido.producto', '-descripcion').populate('payment', 'name');;
         if (queryPedidos.length < 1) {
             throw new ErrorHandler(404, 'No se encuentran pedidos');
         }

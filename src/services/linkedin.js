@@ -1,6 +1,5 @@
 const passport = require("passport");
 const LinkedinStrategy = require("passport-linkedin-oauth2").Strategy;
-require("dotenv").config();
 const User = require("../models/User");
 
 passport.serializeUser(function (user, done) {

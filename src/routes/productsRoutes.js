@@ -1,8 +1,8 @@
 const express = require('express');
+const router = express.Router();
 const { productosget, productospost, productosput, validateProductId, productosdelete } = require('../controllers/productsController');
 const { authorize, needsAdmin } = require('../middlewares/auth');
 const { cache } = require('../middlewares/cache');
-const router = express.Router();
 
 //const product
 router.get('/productos',cache, productosget)

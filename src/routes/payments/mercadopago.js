@@ -1,50 +1,77 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
-require("dotenv").config();
+const { authorize } = require("../../middlewares/auth");
+const Pedido = require("../../models/Pedido");
+const axios = require("axios");
+const url = "https://api.mercadopago.com/checkout/preferences";
 
-const mercadopago = require("mercadopago");
-
-// Agrega credenciales
-mercadopago.configure({
-  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
-});
-
-router.post("/create_preference", (req, res) => {
-  let preference = {
-    items: [
-      {
-        title: req.body.description,
-        unit_price: Number(req.body.price),
-        quantity: Number(req.body.quantity),
-      },
-    ],
-    back_urls: {
-      success: "./feedback",
-      failure: "./feedback",
-      pending: "./feedback",
-    },
-    auto_return: "approved",
-  };
-
-  mercadopago.preferences
-    .create(preference)
-    .then(function (response) {
-      res.json({
-        id: response.body.id,
+async function getMercadoPagoLink(req, res) {
+  const { idpedido } = req.params;
+  const items = [];
+  try {
+    const elpedido = await Pedido.findById(idpedido).populate(
+      "subpedido.producto",
+      "-descripcion"
+    );
+    if (elpedido.estado !== "Confirmado") {
+      return res.send('El pedido debe estar confirmado');
+    }
+    if (req.user._id !== elpedido.user_id.valueOf()) {
+      return res.status(400).json({
+        error: true,
+        msg: "El pedido no le pertenece",
       });
-    })
-    .catch(function (error) {
-      console.log(error);
+    }
+    elpedido.subpedido.forEach((element) => {
+      let obj = {};
+      (obj.title = element.producto.nombre),
+        (obj.unit_price = element.producto.precio),
+        (obj.quantity = element.cant),
+        items.push(obj);
     });
-});
+    let preferences = {
+      items,
+      back_urls: {
+        success: process.env.MERCADOPAGO_SUCCESS,
+        pending: process.env.MERCADOPAGO_PENDING,
+        failure: process.env.MERCADOPAGO_FAILURE,
+      },
+      auto_return: "approved",
+    };
+    const checkout = await apiMercadoPago(url, preferences);
+    return res.send({ "link de pago": checkout.init_point });
+  } catch (err) {
+    return res.status(500).json({
+      error: true,
+      msg: "Hubo un error con Mercado Pago",
+    });
+  }
+}
 
-router.get("/feedback", function (req, res) {
-  res.json({
-    Payment: req.query.payment_id,
-    Status: req.query.status,
-    MerchantOrder: req.query.merchant_order_id,
-  });
+async function apiMercadoPago(url, preferences) {
+  try {
+    const mpapi = await axios.post(url, preferences, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`,
+      },
+    });
+    return mpapi.data;
+  } catch (err) {
+    return console.log(err);
+  }
+}
+
+router.post("/payment/new/:idpedido", authorize, getMercadoPagoLink);
+
+router.get("/payment/new/success", (req, res) => {
+  res.status(200).json(req.query);
+});
+router.get("/payment/new/failure", (req, res) => {
+  res.status(400).json(req.query);
+});
+router.get("/payment/new/pending", (req, res) => {
+  res.status(400).json(req.query);
 });
 
 module.exports = router;

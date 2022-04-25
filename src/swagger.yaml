@@ -13,6 +13,8 @@ tags:
     description: Seccion Usuarios
   - name: Pedidos
     description: Todo sobre tus pedidos
+  - name: Pagos
+    description: Todo sobre tus pagos
   - name: Productos
     description: Todo sobre los Productos de Delailah Resto
   - name: Only admins
@@ -24,6 +26,32 @@ components:
       scheme: bearer
       bearerFormat: JWT    
 paths:
+  /mercadopago/payment/new/{idpedido}:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - "Pagos"
+      summary: Realizar un pago.
+      parameters:
+        - in: path
+          name: idpedido
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':   #status code
+          description: Link para pagar en mercadopago
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  link de pago:
+                    type: string
+                    description: URL mercadopago
+        default:
+          description: Unexpected error
   /users/register:
     post:
       tags:
