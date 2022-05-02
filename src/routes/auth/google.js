@@ -7,12 +7,12 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 const cors = require('cors');
 
-const cookieSession = require('cookie-session');
+const Session = require('cookie-session');
 
 router.use(cors());
 
 router.use(
-  cookieSession({
+  Session({
     name: 'google-auth-session',
     keys: ['key1', 'key2'],
   }),

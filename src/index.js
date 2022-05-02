@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const helmet = require("helmet");
+const session = require('express-session');
 const cors = require("cors");
 const passport = require("passport");
 const { handleError } = require("./middlewares/errors");
@@ -19,6 +20,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
+app.set('trust proxy', 1) // trust first proxy
 
 app.use(passport.initialize());
 app.use("/api/v2", require("./middlewares/documentation"));
