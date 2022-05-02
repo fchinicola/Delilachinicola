@@ -34,9 +34,11 @@ router.get(
   })
 );
 
+/*
 router.get(
   "/google/callback",
   passport.authenticate("google", {
+    session: false,
     successRedirect: "../google/success",
     failureRedirect: "../google/failure",
   })
@@ -59,17 +61,17 @@ router.get("/google/success", (req, res) => {
       }
       return res.status(200).json(token);
     }
-  );
-});
-
-/*
+    );
+  });
+  
+  */
+  
 router.get(
   '/google/callback',
   passport.authenticate('google', {
     session: false,
     failureRedirect: process.env.REGISTER_URL,
     failureMessage: true,
-    successRedirect: '/',
   }),
   (req, res) => {
     jwt.sign(
@@ -90,6 +92,5 @@ router.get(
     );
   },
 );
-*/
 
 module.exports = router;
