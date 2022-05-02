@@ -2,14 +2,6 @@ const passport = require("passport");
 const LinkedinStrategy = require("passport-linkedin-oauth2").Strategy;
 const User = require("../models/User");
 
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-  done(null, user);
-});
-
 passport.use(
   new LinkedinStrategy(
     {
@@ -41,3 +33,11 @@ passport.use(
     }
   )
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});

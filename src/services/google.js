@@ -1,14 +1,7 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/User");
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+const {singtoken} = require("../controllers/userController")
 
 passport.use(
   "google",
@@ -17,11 +10,10 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.CALLBACK_URL_GOOGLE,
-      scope: ['profile', 'email'],
+      scope: ["profile", "email"],
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {
-      console.log('Google login')
       try {
         let existingUser = await User.findOne({
           email: profile.emails[0].value,
@@ -32,7 +24,8 @@ passport.use(
             existingUser.google.email = profile.emails[0].value;
             await existingUser.save();
           }
-          return done(null, existingUser);
+          return done(null, {_id: existingUser._id,
+          admin: existingUser.admin});
         } else {
           return done(null, false);
         }
@@ -43,3 +36,10 @@ passport.use(
   )
 );
 
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});

@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const passport = require("passport");
 const { handleError } = require("./middlewares/errors");
-
+const session = require("express-session");
 
 // Initialitations
 const port = process.env.PORT || 3000;
@@ -19,9 +19,10 @@ app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
-app.set('trust proxy', 1) // trust first proxy
-
+app.set("trust proxy", 1); // trust first proxy
+app.use(session({ secret: "chini", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
+app.use(passport.session());
 app.use("/api/v2", require("./middlewares/documentation"));
 
 // Add headers before the routes are defined

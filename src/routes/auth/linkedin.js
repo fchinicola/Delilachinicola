@@ -2,24 +2,9 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = process.env;
-
-const cookieSession = require('cookie-session');
-
-router.use(cors());
-
-router.use(
-  cookieSession({
-    name: 'linkedin-auth-session',
-    keys: ['key1', 'key2'],
-  }),
-);
-
-router.use(passport.initialize());
-router.use(passport.session());
 
 router.get('/good', (req, res) => {
   res.send('Salio bien para linkedin');
