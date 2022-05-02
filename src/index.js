@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const helmet = require("helmet");
-const session = require('express-session');
 const cors = require("cors");
 const passport = require("passport");
 const { handleError } = require("./middlewares/errors");
