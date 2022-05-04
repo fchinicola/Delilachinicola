@@ -8,20 +8,12 @@ function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401);
 }
 
-router.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    prompt: "consent",
-  })
-);
+router.get("/google", passport.authenticate("google"));
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "../google/success",
-    failureRedirect: "../google/failure",
-  })
+  passport.authenticate("google", { failureRedirect: '/login', failureMessage: true }),
+  (req,res) => {res.redirect('../google/success')}
 );
 
 router.get("/google/success", isLoggedIn, (req, res) => {

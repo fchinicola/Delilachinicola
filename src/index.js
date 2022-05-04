@@ -1,13 +1,13 @@
-const express = require("express");
-const app = express();
 require("dotenv").config();
+const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const passport = require("passport");
 const { handleError } = require("./middlewares/errors");
-const session = require("express-session");
+const cookieSession = require("cookie-session");
 
 // Initialitations
+const app = express();
 const port = process.env.PORT || 3000;
 const enviroment = process.env.NODE_ENV;
 const apiDescription = process.env.API_DESCRIPTION;
@@ -20,9 +20,15 @@ app.use(express.json());
 app.use(cors());
 
 app.set("trust proxy", 1); // trust first proxy
-app.use(session({ secret: "chini", resave: false, saveUninitialized: true }));
+app.use(cookieSession({
+  name: 'session',
+  keys: ["ibaeltercero"],
+  maxAge: 24 * 60 * 60 * 1000,
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use("/api/v2", require("./middlewares/documentation"));
 
 // Add headers before the routes are defined
