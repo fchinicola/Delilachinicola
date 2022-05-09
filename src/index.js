@@ -19,12 +19,14 @@ app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
-app.set('trust proxy', true); // trust first proxy
-app.use(cookieSession({
-  name: 'session',
-  keys: ["ibaeltercero"],
-  maxAge: 24 * 60 * 60 * 1000,
-}));
+app.set("trust proxy", true); // trust first proxy
+
+app.use(
+  cookieSession({
+    keys: ["ibaeltercero"],
+    maxAge: 24 * 60 * 60 * 1000,
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());

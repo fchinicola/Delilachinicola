@@ -3,6 +3,7 @@ const router = express.Router();
 const google = require("./google");
 const linkedin = require("./linkedin");
 const github = require('./github');
+const local = require("./local");
 //const auth0 = require('./auth0');
 //const facebook = require('./facebook');
 

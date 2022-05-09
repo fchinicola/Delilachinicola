@@ -3,3 +3,4 @@
 require('./google');
 require('./linkedin');
 require('./github');
+require('./local');
