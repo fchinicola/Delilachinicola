@@ -4,7 +4,7 @@ info:
   description: API de Delailah Resto para presentar en Sprint Proyect 4 de Acamica.
   version: 2.0.0
 servers:
-  - url: https://www.delilachinicola.tk/api/api/v2
+  - url: https://www.delilachinicola.tk/api/v2
     description: Server de Produccion
   - url: http://localhost:3000/api/v2
     description: Server local de pruebas

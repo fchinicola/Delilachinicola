@@ -37,7 +37,7 @@ passport.use(
   )
 );
 
-/*
+
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -45,4 +45,3 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
-*/
