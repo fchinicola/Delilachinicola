@@ -19,8 +19,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
-app.set("trust proxy", 1); // trust first proxy
-sess.cookie.secure = true;
+app.set('trust proxy', true); // trust first proxy
 app.use(cookieSession({
   name: 'session',
   keys: ["ibaeltercero"],
