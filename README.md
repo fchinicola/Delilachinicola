@@ -39,7 +39,7 @@ npm run dev
 npm run test
 ```
 
-## Uso a travez de Swagger
+## Uso en Swagger:
 
 http://localhost:3000/api/v2/api-docs/
 

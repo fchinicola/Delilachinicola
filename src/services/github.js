@@ -27,7 +27,8 @@ passport.use(
             existingUser.github.email = response.data[0].email;
             await existingUser.save();
           }
-          return done(null, existingUser);
+          return done(null, {_id: existingUser._id,
+            admin: existingUser.admin});
         } else {
           return done(null, false);
         }
