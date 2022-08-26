@@ -29,7 +29,7 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^9.2.0",
-    "mongoose": "^6.0.12",
+    "mongoose": "^6.4.6",
     "passport": "^0.5.2",
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
